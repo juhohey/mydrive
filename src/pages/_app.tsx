@@ -8,6 +8,7 @@ import '../styles/layout.css'
 import '../styles/dialog.css'
 import '../styles/upload.css'
 import '../styles/margin.css'
+import '../styles/file.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

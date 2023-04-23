@@ -3,7 +3,13 @@ import { get } from '../client/http'
 import { apiRouteFile } from '../client/routes'
 
 export type TFile = {
+  filepath: string
   name: string
+  extension: string
+  id: string
+  owner: string
+  userPermissions: []
+  orgPermissions: []
 }
 
 const initialState = {
@@ -24,13 +30,16 @@ const filesStore = createSlice({
   },
 })
 
-export const getUserFiles = async (dispatch, getState) => {
+export const getUserFilesIfNotExists = async (dispatch, getState) => {
   if (getState().files.status !== 'initial') return
 
   dispatch(filesStore.actions.setStatus('loading'))
 
   const files = await get(apiRouteFile)
-
+  dispatch(filesStore.actions.setFiles(files))
+}
+export const getUserFiles = async (dispatch, getState) => {
+  const files = await get(apiRouteFile)
   dispatch(filesStore.actions.setFiles(files))
 }
 

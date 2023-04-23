@@ -26,3 +26,16 @@
 .header__avatar {
   margin: 0 12px;
 }
+
+.row {
+  display: flex;
+  flex-flow: row wrap;
+  margin-left: -16px;
+  margin-right: -16px;
+}
+
+.file-actions__selected {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}

@@ -3,6 +3,8 @@
   --color-bg-200: #fafafa;
 
   --color-text: #222;
+
+  --color-primary: #9747ff;
 }
 
 @media (prefers-color-scheme: dark) {

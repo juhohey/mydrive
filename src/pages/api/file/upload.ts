@@ -17,6 +17,7 @@ export default async function handler(
         const files = parsedFiles.map((file) => ({
           filepath: file.filepath,
           name: file.originalFilename,
+          extension: path.extname(file.newFilename).toLowerCase(),
           id: path.basename(file.newFilename, path.extname(file.newFilename)),
           owner: reqContext.user.name,
           userPermissions: [],

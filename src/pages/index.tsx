@@ -3,20 +3,47 @@ import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { post } from '../client/http'
 import { apiRouteFileUpload } from '../client/routes'
 import Dialog from '../components/Dialog/Dialog'
+import File from '../components/File/File'
 import Header from '../components/Header/Header'
-import { getUserFiles } from '../store/filesStore'
-import store, { useAppDispatch, useAppSelector } from '../store/store'
+import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
+import { useAppDispatch, useAppSelector } from '../store/store'
+
+type HomeState = {
+  selectedFiles: string[]
+  isAddingFiles: boolean
+}
 
 export default function Home() {
   const dispatch = useAppDispatch()
   const files = useAppSelector((state) => state.files)
-  const [state, setState] = useState({ isAddingFiles: false })
+  const [state, setState] = useState<HomeState>({
+    selectedFiles: [],
+    isAddingFiles: false,
+  })
   useEffect(() => {
-    dispatch(getUserFiles)
+    dispatch(getUserFilesIfNotExists)
   }, [])
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
+  const onUploadedFiles = () => {
+    setState({ ...state, isAddingFiles: false })
+    dispatch(getUserFiles)
+  }
+  const onSelectFile = (id: string) => {
+    const isSelected = state.selectedFiles.includes(id)
+    if (isSelected) {
+      setState({
+        ...state,
+        selectedFiles: state.selectedFiles.filter(
+          (selectedFile) => selectedFile !== id
+        ),
+      })
+    } else {
+      setState({ ...state, selectedFiles: state.selectedFiles.concat(id) })
+    }
+  }
+
   return (
     <>
       <Head>
@@ -36,10 +63,31 @@ export default function Home() {
         </Header>
         <main className="main">
           <div className={'container'}>
-            <h1>Files</h1>
-            <div>
+            <h1 className="m-b-2">Files</h1>
+            <div className="file-actions row">
+              <p className="file-actions__action">search</p>
+              <p className="file-actions__action">view: grid</p>
+              <p className="file-actions__action">view: table</p>
+              <p className="file-actions__action">sort</p>
+              <p className="file-actions__action">filter</p>
+
+              {Boolean(state.selectedFiles.length) && (
+                <div className="file-actions__selected">
+                  <button>Delete selected</button>
+                  <button>Share selected</button>
+                </div>
+              )}
+            </div>
+            <div className="row">
               {files.data.map((file) => (
-                <p key={file.id}>{file.name}</p>
+                <File
+                  key={file.id}
+                  file={file}
+                  onClick={() => onSelectFile(file.id)}
+                  isSelected={Boolean(
+                    state.selectedFiles.find((id) => id === file.id)
+                  )}
+                />
               ))}
             </div>
           </div>
@@ -47,6 +95,7 @@ export default function Home() {
         <AddFilesDialog
           isOpen={state.isAddingFiles}
           onClose={onCloseAddingFiles}
+          onUploaded={onUploadedFiles}
         />
       </div>
     </>
@@ -56,9 +105,14 @@ export default function Home() {
 type AddFilesDialogProps = {
   isOpen: boolean
   onClose: () => void
+  onUploaded: () => void
 }
 
-const AddFilesDialog = ({ isOpen, onClose }: AddFilesDialogProps) => {
+const AddFilesDialog = ({
+  isOpen,
+  onClose,
+  onUploaded,
+}: AddFilesDialogProps) => {
   const [files, setFiles] = useState<File[]>([])
 
   const onSetFiles = (e: SyntheticEvent<HTMLInputElement>) => {
@@ -72,7 +126,7 @@ const AddFilesDialog = ({ isOpen, onClose }: AddFilesDialogProps) => {
       const formData = new FormData()
       files.forEach((file) => formData.append(file.name, file))
       await post(apiRouteFileUpload, formData)
-      onClose()
+      onUploaded()
     } catch (error) {
       console.log('err', error)
     }
