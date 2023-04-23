@@ -32,7 +32,12 @@ export default function AddFilesDialog({
     >
       <div className="m-b-4">
         <h1 className="m-b-1">Add files</h1>
-        <input type="file" multiple={true} onChange={onSetFiles} />
+        <input
+          type="file"
+          multiple={true}
+          onChange={onSetFiles}
+          accept=".pdf,.jpeg,.jpg,.png,.webp,.gif"
+        />
       </div>
       <h2 className="m-b-1">Files</h2>
       <div className="dialog__scroll">
