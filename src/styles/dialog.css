@@ -22,6 +22,8 @@
 
 .dialog__body {
   width: 70%;
+  min-width: 320px;
+  border-radius: 4px;
   margin: 24px auto;
   padding: 24px;
   position: relative;
@@ -32,7 +34,9 @@
 .dialog__actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 64px;
 }
+
 .dialog__action {
   margin: 0 12px;
 }

@@ -90,8 +90,15 @@ export default function Home() {
 
               {Boolean(state.selectedFiles.length) && (
                 <div className="file-actions__selected">
-                  <button onClick={onDeleteSelected}>Delete selected</button>
-                  <button>Share selected</button>
+                  <button
+                    className="file-actions__action"
+                    onClick={onDeleteSelected}
+                  >
+                    Delete selected
+                  </button>
+                  <button className="file-actions__action">
+                    Share selected
+                  </button>
                 </div>
               )}
             </div>
