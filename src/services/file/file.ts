@@ -13,6 +13,12 @@ export const saveFiles = (files: TFile[], db: TDatabase) => {
   })
 }
 
+export const deleteFiles = (fileIds: TFile['id'][], db: TDatabase) => {
+  db.get('files')
+    .remove((file) => fileIds.includes(file.id))
+    .write()
+}
+
 export const getUserFiles = (userId: string, db: TDatabase) => {
   const ownFiles = db
     .get('files')

@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { post } from '../client/http'
-import { apiRouteFileUpload } from '../client/routes'
+import { deleteHttp, post } from '../client/http'
+import { apiRouteFile, apiRouteFileUpload } from '../client/routes'
 import Dialog from '../components/Dialog/Dialog'
 import File from '../components/File/File'
 import Header from '../components/Header/Header'
@@ -26,10 +26,12 @@ export default function Home() {
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
+
   const onUploadedFiles = () => {
     setState({ ...state, isAddingFiles: false })
     dispatch(getUserFiles)
   }
+
   const onSelectFile = (id: string) => {
     const isSelected = state.selectedFiles.includes(id)
     if (isSelected) {
@@ -41,6 +43,21 @@ export default function Home() {
       })
     } else {
       setState({ ...state, selectedFiles: state.selectedFiles.concat(id) })
+    }
+  }
+
+  const onDeleteSelected = async () => {
+    try {
+      await deleteHttp(
+        `${apiRouteFile}?${state.selectedFiles.reduce(
+          (acc, next) => acc + '&id=' + next,
+          ''
+        )}`
+      )
+      setState({ ...state, selectedFiles: [] })
+      dispatch(getUserFiles)
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -73,7 +90,7 @@ export default function Home() {
 
               {Boolean(state.selectedFiles.length) && (
                 <div className="file-actions__selected">
-                  <button>Delete selected</button>
+                  <button onClick={onDeleteSelected}>Delete selected</button>
                   <button>Share selected</button>
                 </div>
               )}
