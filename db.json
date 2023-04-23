@@ -1,1 +1,33 @@
-{}
+{
+  "files": [
+    [
+      {
+        "filepath": "/Users/juhoheikkila/dev/2023/mydrive2/uploads/1550eed882b603a40b9f79d00.svg",
+        "name": "users.svg",
+        "id": "1550eed882b603a40b9f79d00.svg",
+        "owner": {
+          "name": "alice"
+        }
+      }
+    ],
+    [],
+    [
+      {
+        "filepath": "/Users/juhoheikkila/dev/2023/mydrive2/uploads/1550eed882b603a40b9f79d01.svg",
+        "name": "users.svg",
+        "id": "1550eed882b603a40b9f79d01.svg",
+        "owner": {
+          "name": "alice"
+        }
+      }
+    ],
+    [
+      {
+        "filepath": "/Users/juhoheikkila/dev/2023/mydrive2/uploads/1550eed882b603a40b9f79d02.svg",
+        "name": "users.svg",
+        "id": "1550eed882b603a40b9f79d02",
+        "owner": "alice"
+      }
+    ]
+  ]
+}

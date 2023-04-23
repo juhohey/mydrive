@@ -1,13 +1,14 @@
 import Head from 'next/head'
 import React, { SyntheticEvent, useState } from 'react'
+import { post } from '../client/http'
+import { apiRouteFileUpload } from '../client/routes'
 import Dialog from '../components/Dialog/Dialog'
 import Header from '../components/Header/Header'
-import { TFile } from '../store/filesStore'
 import { useAppSelector } from '../store/store'
 
 export default function Home() {
   const files = useAppSelector((state) => state.files)
-  const [state, setState] = useState({ isAddingFiles: true })
+  const [state, setState] = useState({ isAddingFiles: false })
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
@@ -53,18 +54,30 @@ type AddFilesDialogProps = {
 }
 
 const AddFilesDialog = ({ isOpen, onClose }: AddFilesDialogProps) => {
-  const [files, setFiles] = useState<TFile[]>([])
+  const [files, setFiles] = useState<File[]>([])
 
   const onSetFiles = (e: SyntheticEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
     const files = target.files || []
     setFiles([...files])
   }
+
+  const onUpload = async () => {
+    try {
+      const formData = new FormData()
+      files.forEach((file) => formData.append(file.name, file))
+      await post(apiRouteFileUpload, formData)
+      onClose()
+    } catch (error) {
+      console.log('err', error)
+    }
+  }
+
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={() => {}}
+      onConfirm={onUpload}
       confirmLabel={'upload'}
     >
       <div className="m-b-4">
