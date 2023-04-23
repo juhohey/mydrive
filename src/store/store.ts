@@ -1,5 +1,11 @@
-import { AnyAction, configureStore, ThunkDispatch } from '@reduxjs/toolkit'
+import {
+  AnyAction,
+  applyMiddleware,
+  configureStore,
+  ThunkDispatch,
+} from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
 import filesStore from './filesStore'
 
 export type TStoreKey = keyof ReturnType<typeof createStore>
@@ -21,6 +27,7 @@ function createStore() {
     reducer: {
       files: filesStore.reducer,
     },
+    middleware: [thunkMiddleware],
   })
 
   return store

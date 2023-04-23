@@ -19,10 +19,11 @@ export default async function handler(
           name: file.originalFilename,
           id: path.basename(file.newFilename, path.extname(file.newFilename)),
           owner: reqContext.user.name,
+          userPermissions: [],
+          orgPermissions: [],
         }))
 
         await saveFiles(files, reqContext.db)
-        console.log('saved files', parsedFiles)
 
         return res.json(files)
       } catch (error) {

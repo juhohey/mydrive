@@ -9,3 +9,9 @@ export const post = (url: string, body: any) => {
     body,
   })
 }
+
+export const get = (url: string) => {
+  return fetch(url, {
+    headers,
+  }).then((res) => res.json())
+}

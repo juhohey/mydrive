@@ -1,14 +1,19 @@
 import Head from 'next/head'
-import React, { SyntheticEvent, useState } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { post } from '../client/http'
 import { apiRouteFileUpload } from '../client/routes'
 import Dialog from '../components/Dialog/Dialog'
 import Header from '../components/Header/Header'
-import { useAppSelector } from '../store/store'
+import { getUserFiles } from '../store/filesStore'
+import store, { useAppDispatch, useAppSelector } from '../store/store'
 
 export default function Home() {
+  const dispatch = useAppDispatch()
   const files = useAppSelector((state) => state.files)
   const [state, setState] = useState({ isAddingFiles: false })
+  useEffect(() => {
+    dispatch(getUserFiles)
+  }, [])
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
