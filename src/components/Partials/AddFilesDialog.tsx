@@ -25,6 +25,7 @@ export default function AddFilesDialog({
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={() => {
+        setFiles([])
         onUpload(files)
       }}
       confirmLabel={'upload'}
@@ -34,7 +35,7 @@ export default function AddFilesDialog({
         <input type="file" multiple={true} onChange={onSetFiles} />
       </div>
       <h2 className="m-b-1">Files</h2>
-      <div className="upload-files">
+      <div className="dialog__scroll">
         {files.map((file, i) => {
           return (
             <div key={i + file.name} className="upload-files__file">

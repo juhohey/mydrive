@@ -28,7 +28,9 @@
 }
 
 .header__upload {
-  /* background-color: var(--color-bg-100); */
+  text-decoration: underline;
+  margin-right: 32px;
+  cursor: pointer;
 }
 
 .row {

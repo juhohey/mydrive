@@ -9,7 +9,7 @@ export default async function handler(
 
   switch (req.method) {
     case 'GET':
-      return res.status(200).json({ name: user.name })
+      return res.status(200).json(user)
 
     default:
       return res.status(405)

@@ -6,6 +6,7 @@ const formatSharedFile = (file) => ({
   filepath: file.filepath,
   name: file.name,
   id: file.id,
+  userPermission: file.userPermission,
 })
 
 export const saveFiles = (files: TFile[], db: TDatabase) => {

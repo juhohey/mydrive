@@ -62,40 +62,44 @@ export default function ShareFilesDialog({
             <h4>Permissions</h4>
           </div>
         </div>
-        {usersCanSharewith.map((user) => {
-          return (
-            <div key={user.id} className="share__row">
-              <div className="share__name">{user.name}</div>
+        <div className="dialog__scroll">
+          {usersCanSharewith.map((user) => {
+            return (
+              <div key={user.id} className="share__row">
+                <div className="share__name">{user.name}</div>
 
-              <div className="share__permissions">
-                <p
-                  className={`share__permission ${
-                    state[user.id]?.read ? 'share__permission--selected' : ''
-                  }`}
-                  onClick={onShareCurried(user.id, 'read')}
-                >
-                  Read
-                </p>
-                <p
-                  className={`share__permission ${
-                    state[user.id]?.write ? 'share__permission--selected' : ''
-                  }`}
-                  onClick={onShareCurried(user.id, 'write')}
-                >
-                  Write
-                </p>
-                <p
-                  className={`share__permission ${
-                    state[user.id]?.delete ? 'share__permission--selected' : ''
-                  }`}
-                  onClick={onShareCurried(user.id, 'delete')}
-                >
-                  Delete
-                </p>
+                <div className="share__permissions">
+                  <p
+                    className={`share__permission ${
+                      state[user.id]?.read ? 'share__permission--selected' : ''
+                    }`}
+                    onClick={onShareCurried(user.id, 'read')}
+                  >
+                    Read
+                  </p>
+                  <p
+                    className={`share__permission ${
+                      state[user.id]?.write ? 'share__permission--selected' : ''
+                    }`}
+                    onClick={onShareCurried(user.id, 'write')}
+                  >
+                    Write
+                  </p>
+                  <p
+                    className={`share__permission ${
+                      state[user.id]?.delete
+                        ? 'share__permission--selected'
+                        : ''
+                    }`}
+                    onClick={onShareCurried(user.id, 'delete')}
+                  >
+                    Delete
+                  </p>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </Dialog>
   )

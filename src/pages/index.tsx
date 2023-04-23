@@ -35,6 +35,14 @@ export default function Home() {
   })
 
   const request = authenticatedRequest(getTokenFromStorage())
+  const canShareSelected = state.selectedFileIds.every(
+    (selectedFileId) =>
+      files.data.find((file) => file.id === selectedFileId)!.owner === me.id
+  )
+  const canDeleteSelected = state.selectedFileIds.every((selectedFileId) => {
+    const file = files.data.find((file) => file.id === selectedFileId)
+    return file.owner === me.id || file?.userPermission[me.id].delete
+  })
 
   useEffect(() => {
     dispatch(getUserFilesIfNotExists)
@@ -115,9 +123,9 @@ export default function Home() {
       <div>
         <Header>
           <>
-            <button className="header__upload" onClick={onOpenAddingFiles}>
+            <p className="header__upload" onClick={onOpenAddingFiles}>
               Upload files
-            </button>
+            </p>
             <div className="header__avatar avatar">
               {me.name.substring(0, 1)}
             </div>
@@ -127,27 +135,35 @@ export default function Home() {
           <div className={'container'}>
             <h1 className="m-b-2">Files</h1>
             <div className="file-actions row">
-              <p className="file-actions__action">search</p>
+              <button className="file-actions__action" disabled={true}>
+                search
+              </button>
               <button className="file-actions__action" disabled={true}>
                 view: grid
               </button>
               <button className="file-actions__action" disabled={true}>
                 view: table
               </button>
-              <p className="file-actions__action">sort</p>
-              <p className="file-actions__action">filter</p>
+              <button className="file-actions__action" disabled={true}>
+                sort
+              </button>
+              <button className="file-actions__action" disabled={true}>
+                filter
+              </button>
 
               {Boolean(state.selectedFileIds.length) && (
                 <div className="file-actions__selected">
                   <button
                     className="file-actions__action"
                     onClick={onDeleteSelected}
+                    disabled={!canDeleteSelected}
                   >
                     Delete selected
                   </button>
                   <button
                     className="file-actions__action"
                     onClick={onOpenSharingFiles}
+                    disabled={!canShareSelected}
                   >
                     Share selected
                   </button>

@@ -61,9 +61,14 @@ button,
   cursor: pointer;
   border-radius: 4px;
 }
+
 button:disabled,
 .button:disabled {
   opacity: 0.5;
+}
+
+input[type='file'] {
+  font-size: 18px;
 }
 
 @media (prefers-color-scheme: dark) {
