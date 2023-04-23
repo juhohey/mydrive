@@ -21,7 +21,6 @@ export const updateFilePermissions = (
   db: TDatabase
 ) => {
   fileIds.forEach((fileId) => {
-    console.log('update with ', fileId, permission)
     db.get('files')
       .find((file) => file.id === fileId)
       .assign({ userPermission: permission })

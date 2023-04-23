@@ -14,6 +14,7 @@ export default async function handler(
     case 'POST':
       try {
         const parsedFiles = await parseForm(req)
+
         const files = parsedFiles.map((file) => ({
           filepath: file.filepath,
           name: file.originalFilename,
@@ -28,7 +29,6 @@ export default async function handler(
 
         return res.json(files)
       } catch (error) {
-        console.log('parsing failed', error)
         return res.status(400).send(error)
       }
 

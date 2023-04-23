@@ -99,7 +99,7 @@ export default function Home() {
       setState({ ...state, selectedFileIds: [] })
       dispatch(getUserFiles)
     } catch (error) {
-      console.log(error)
+      dispatch(snackStore.actions.showSnack(error))
     }
   }
 
@@ -116,7 +116,7 @@ export default function Home() {
       setState({ ...state, isSharingFiles: false, selectedFileIds: [] })
       dispatch(getUserFiles)
     } catch (error) {
-      console.log(error)
+      dispatch(snackStore.actions.showSnack(error))
     }
   }
 
@@ -131,7 +131,7 @@ export default function Home() {
       setState({ ...state, isAddingFiles: false })
       dispatch(getUserFiles)
     } catch (error) {
-      console.log(error)
+      dispatch(snackStore.actions.showSnack(error))
     }
   }
 
