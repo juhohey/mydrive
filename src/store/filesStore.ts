@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type TFiles = {}
+export type TFile = {
+  name: string
+}
 
 const initialState = {
-  data: [],
+  data: [] as TFile[],
   status: '',
 }
 

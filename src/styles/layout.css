@@ -1,6 +1,7 @@
 .container {
   max-width: 1120px;
   margin: 0 auto;
+  padding: 0 16px;
 }
 
 .main {
@@ -19,6 +20,7 @@
   min-width: 200px;
   margin-left: auto;
   display: flex;
+  align-items: center;
 }
 
 .header__avatar {

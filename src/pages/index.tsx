@@ -1,10 +1,16 @@
 import Head from 'next/head'
-import React from 'react'
+import React, { SyntheticEvent, useState } from 'react'
+import Dialog from '../components/Dialog/Dialog'
 import Header from '../components/Header/Header'
+import { TFile } from '../store/filesStore'
 import { useAppSelector } from '../store/store'
 
 export default function Home() {
   const files = useAppSelector((state) => state.files)
+  const [state, setState] = useState({ isAddingFiles: true })
+
+  const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
+  const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
   return (
     <>
       <Head>
@@ -14,7 +20,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Header />
+        <Header>
+          <>
+            <button onClick={onOpenAddingFiles}>Upload</button>
+            <div className="header__avatar avatar">
+              <p>userName</p>
+            </div>
+          </>
+        </Header>
         <main className="main">
           <div className={'container'}>
             <h1>Files</h1>
@@ -25,7 +38,49 @@ export default function Home() {
             </div>
           </div>
         </main>
+        <AddFilesDialog
+          isOpen={state.isAddingFiles}
+          onClose={onCloseAddingFiles}
+        />
       </div>
     </>
+  )
+}
+
+type AddFilesDialogProps = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+const AddFilesDialog = ({ isOpen, onClose }: AddFilesDialogProps) => {
+  const [files, setFiles] = useState<TFile[]>([])
+
+  const onSetFiles = (e: SyntheticEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
+    const files = target.files || []
+    setFiles([...files])
+  }
+  return (
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={() => {}}
+      confirmLabel={'upload'}
+    >
+      <div className="m-b-4">
+        <h1 className="m-b-1">Add files</h1>
+        <input type="file" multiple={true} onChange={onSetFiles} />
+      </div>
+      <h2 className="m-b-1">Files</h2>
+      <div className="upload-files">
+        {files.map((file, i) => {
+          return (
+            <div key={i + file.name} className="upload-files__file">
+              {file.name}
+            </div>
+          )
+        })}
+      </div>
+    </Dialog>
   )
 }

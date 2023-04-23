@@ -5,6 +5,9 @@ import store from '../store/store'
 
 import '../styles/globals.css'
 import '../styles/layout.css'
+import '../styles/dialog.css'
+import '../styles/upload.css'
+import '../styles/margin.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

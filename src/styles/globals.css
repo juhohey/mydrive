@@ -32,6 +32,32 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  font-size: 40px;
+}
+h2 {
+  font-size: 32px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+
+button,
+.button {
+  padding: 8px 24px;
+  background-color: var(--color-bg-100);
+  color: var(--color-text);
+  border: 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
