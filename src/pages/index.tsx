@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import React from 'react'
+import Header from '../components/Header/Header'
 import { useAppSelector } from '../store/store'
 
 export default function Home() {
@@ -11,16 +13,19 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={''}>
-        <h1>Home</h1>
-
-        <h2>Files</h2>
-        <div>
-          {files.data.map((file) => (
-            <p key={file.id}>{file.name}</p>
-          ))}
-        </div>
-      </main>
+      <div>
+        <Header />
+        <main className="main">
+          <div className={'container'}>
+            <h1>Files</h1>
+            <div>
+              {files.data.map((file) => (
+                <p key={file.id}>{file.name}</p>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
     </>
   )
 }

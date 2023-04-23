@@ -1,0 +1,26 @@
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.main {
+  margin-top: 24px;
+}
+
+.header {
+  height: 64px;
+  background-color: var(--color-bg-200);
+  display: flex;
+  align-items: center;
+}
+
+.header__container {
+  width: 30%;
+  min-width: 200px;
+  margin-left: auto;
+  display: flex;
+}
+
+.header__avatar {
+  margin: 0 12px;
+}
