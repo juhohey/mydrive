@@ -134,7 +134,7 @@ export default function Home() {
         <main className="main">
           <div className={'container'}>
             <h1 className="m-b-2">Files</h1>
-            <div className="file-actions row">
+            <div className="file-actions row sticky-after-header">
               <button className="file-actions__action" disabled={true}>
                 search
               </button>

@@ -56,3 +56,15 @@
   align-items: center;
   flex-direction: column;
 }
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.sticky-after-header {
+  position: sticky;
+  top: 64px;
+  z-index: 1;
+}

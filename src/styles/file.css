@@ -28,8 +28,17 @@
   display: flex;
   border-bottom: 1px solid var(--color-bg-200);
   align-items: center;
+  background-color: var(--color-bg-100);
 }
 
 .file-actions__action {
   margin: 16px;
+}
+
+@media only screen and (max-width: 600px) {
+  .file-actions__action {
+    margin: 0;
+    padding: 16px;
+    background: transparent;
+  }
 }

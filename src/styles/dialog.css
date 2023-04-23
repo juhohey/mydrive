@@ -5,6 +5,7 @@
   height: 100vh;
   width: 100vw;
   display: none;
+  z-index: 100;
 }
 
 .dialog--open {
@@ -45,7 +46,8 @@
 
 .dialog__scroll {
   margin-bottom: 24px;
-  max-height: 400px;
+  height: 400px;
+  max-height: 45vh;
   overflow: scroll;
   background: var(--color-bg-100);
   padding: 12px;
