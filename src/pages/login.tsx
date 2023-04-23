@@ -28,6 +28,7 @@ export default function Auth() {
     }
   }
 
+  const isInitial = status === 'initial'
   const isLoading = status === 'loading'
   const isAuthenticated = status === 'success'
 
@@ -47,7 +48,7 @@ export default function Auth() {
           <div className="auth__actions">
             <button
               className="auth__login"
-              disabled={isLoading}
+              disabled={!isInitial}
               onClick={() => {
                 onLogin('alice')
               }}
@@ -56,7 +57,7 @@ export default function Auth() {
             </button>
             <button
               className="auth__login"
-              disabled={isLoading}
+              disabled={!isInitial}
               onClick={() => {
                 onLogin('bob')
               }}

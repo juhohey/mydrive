@@ -20,8 +20,8 @@ export default async function handler(
           extension: path.extname(file.newFilename).toLowerCase(),
           id: path.basename(file.newFilename, path.extname(file.newFilename)),
           owner: reqContext.user.name,
-          userPermissions: [],
-          orgPermissions: [],
+          userPermission: {},
+          orgPermission: {},
         }))
 
         await saveFiles(files, reqContext.db)

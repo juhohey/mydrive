@@ -1,0 +1,39 @@
+.share__row {
+  display: flex;
+}
+
+.share__row-header {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-bg-300);
+}
+
+.share__permissions {
+  margin-left: auto;
+}
+
+.share__permissions {
+  display: flex;
+  width: 30%;
+  justify-content: center;
+}
+
+.share__permission {
+  margin: 0 4px;
+  opacity: 0.2;
+  cursor: pointer;
+  padding: 4px;
+  font-weight: bold;
+}
+
+.share__permission--selected {
+  opacity: 1;
+}
+
+.share__file {
+  margin-bottom: 24px;
+}
+
+.share__name {
+  font-size: 24px;
+}

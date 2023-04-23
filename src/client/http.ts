@@ -10,6 +10,14 @@ export const post = (url: string, body: any, headers = defaultHeaders) => {
   }).then((res) => res.json())
 }
 
+export const put = (url: string, body: any, headers = defaultHeaders) => {
+  return fetch(url, {
+    method: 'PUT',
+    headers,
+    body,
+  }).then((res) => res.json())
+}
+
 export const get = (url: string, headers = defaultHeaders) => {
   return fetch(url, {
     headers,
@@ -23,7 +31,7 @@ export const deleteHttp = (url: string, headers = defaultHeaders) => {
   }).then((res) => res.json())
 }
 
-export const authenticatedRequest = (token) => {
+export const authenticatedRequest = (token: string) => {
   const headers = new Headers({
     'x-api-token': token,
   })
@@ -32,5 +40,6 @@ export const authenticatedRequest = (token) => {
     get: (url) => get(url, headers),
     delete: (url) => deleteHttp(url, headers),
     post: (url, body) => post(url, body, headers),
+    put: (url, body) => put(url, body, headers),
   }
 }

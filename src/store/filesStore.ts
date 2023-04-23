@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { authenticatedRequest } from '../client/http'
 import { getTokenFromStorage } from '../client/localStorage'
 import { apiRouteFile } from '../client/routes'
+import { TFilePermission } from './userStore'
 
 export type TFile = {
   filepath: string
@@ -9,8 +10,8 @@ export type TFile = {
   extension: string
   id: string
   owner: string
-  userPermissions: []
-  orgPermissions: []
+  userPermission: TFilePermission
+  orgPermission: TFilePermission
 }
 
 const initialState = {

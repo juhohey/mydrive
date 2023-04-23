@@ -1,4 +1,5 @@
 import { TFile } from '../../store/filesStore'
+import { TFilePermission } from '../../store/userStore'
 import { TDatabase } from '../db/db'
 
 const formatSharedFile = (file) => ({
@@ -10,6 +11,20 @@ const formatSharedFile = (file) => ({
 export const saveFiles = (files: TFile[], db: TDatabase) => {
   files.forEach((file) => {
     db.get('files').push(file).write()
+  })
+}
+
+export const updateFilePermissions = (
+  fileIds: TFile['id'][],
+  permission: TFilePermission,
+  db: TDatabase
+) => {
+  fileIds.forEach((fileId) => {
+    console.log('update with ', fileId, permission)
+    db.get('files')
+      .find((file) => file.id === fileId)
+      .assign({ userPermission: permission })
+      .write()
   })
 }
 
@@ -27,11 +42,7 @@ export const getUserFiles = (userId: string, db: TDatabase) => {
 
   const sharedFiles = db
     .get('files')
-    .filter((file) =>
-      file.userPermissions.find(
-        (userPermission) => userPermission.userId === userId
-      )
-    )
+    .filter((file) => file.userPermission[userId]?.read)
     .value()
 
   return ownFiles.concat(sharedFiles.map(formatSharedFile))

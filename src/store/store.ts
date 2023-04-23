@@ -23,7 +23,7 @@ function createStore() {
   const store = configureStore({
     reducer: {
       files: filesStore.reducer,
-      usersStore: usersStore.reducer,
+      users: usersStore.reducer,
       me: meStore.reducer,
     },
     middleware: [thunkMiddleware],

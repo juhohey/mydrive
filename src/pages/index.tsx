@@ -2,17 +2,24 @@ import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 import { authenticatedRequest } from '../client/http'
 import { getTokenFromStorage } from '../client/localStorage'
-import { apiRouteFile, apiRouteFileUpload } from '../client/routes'
+import {
+  apiRouteFile,
+  apiRouteFileShare,
+  apiRouteFileUpload,
+} from '../client/routes'
 import File from '../components/File/File'
 import Header from '../components/Header/Header'
 import AddFilesDialog from '../components/Partials/AddFilesDialog'
+import ShareFilesDialog from '../components/Partials/ShareFilesDialog'
 import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
 import { getMe } from '../store/meStore'
 import { useAppDispatch, useAppSelector } from '../store/store'
+import { getUsersIfNotExists, TFilePermission } from '../store/userStore'
 
 type HomeState = {
-  selectedFiles: string[]
+  selectedFileIds: string[]
   isAddingFiles: boolean
+  isSharingFiles: boolean
 }
 
 export default function Home() {
@@ -22,8 +29,9 @@ export default function Home() {
     me: state.me,
   }))
   const [state, setState] = useState<HomeState>({
-    selectedFiles: [],
+    selectedFileIds: [],
     isAddingFiles: false,
+    isSharingFiles: false,
   })
 
   const request = authenticatedRequest(getTokenFromStorage())
@@ -31,34 +39,51 @@ export default function Home() {
   useEffect(() => {
     dispatch(getUserFilesIfNotExists)
     dispatch(getMe)
+    dispatch(getUsersIfNotExists)
   }, [])
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
 
+  const onCloseSharingFiles = () =>
+    setState({ ...state, isSharingFiles: false })
+  const onOpenSharingFiles = () => setState({ ...state, isSharingFiles: true })
+
   const onSelectFile = (id: string) => {
-    const isSelected = state.selectedFiles.includes(id)
+    const isSelected = state.selectedFileIds.includes(id)
     if (isSelected) {
       setState({
         ...state,
-        selectedFiles: state.selectedFiles.filter(
+        selectedFileIds: state.selectedFileIds.filter(
           (selectedFile) => selectedFile !== id
         ),
       })
     } else {
-      setState({ ...state, selectedFiles: state.selectedFiles.concat(id) })
+      setState({ ...state, selectedFileIds: state.selectedFileIds.concat(id) })
     }
   }
 
   const onDeleteSelected = async () => {
     try {
       await request.delete(
-        `${apiRouteFile}?${state.selectedFiles.reduce(
+        `${apiRouteFile}?${state.selectedFileIds.reduce(
           (acc, next) => acc + '&id=' + next,
           ''
         )}`
       )
-      setState({ ...state, selectedFiles: [] })
+      setState({ ...state, selectedFileIds: [] })
+      dispatch(getUserFiles)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onShare = async (permission: TFilePermission) => {
+    try {
+      const body = { fileIds: state.selectedFileIds, permission }
+      await request.put(apiRouteFileShare, JSON.stringify(body))
+
+      setState({ ...state, isSharingFiles: false, selectedFileIds: [] })
       dispatch(getUserFiles)
     } catch (error) {
       console.log(error)
@@ -69,7 +94,9 @@ export default function Home() {
     try {
       const formData = new FormData()
       files.forEach((file) => formData.append(file.name, file))
+
       await request.post(apiRouteFileUpload, formData)
+
       setState({ ...state, isAddingFiles: false })
       dispatch(getUserFiles)
     } catch (error) {
@@ -101,12 +128,16 @@ export default function Home() {
             <h1 className="m-b-2">Files</h1>
             <div className="file-actions row">
               <p className="file-actions__action">search</p>
-              <p className="file-actions__action">view: grid</p>
-              <p className="file-actions__action">view: table</p>
+              <button className="file-actions__action" disabled={true}>
+                view: grid
+              </button>
+              <button className="file-actions__action" disabled={true}>
+                view: table
+              </button>
               <p className="file-actions__action">sort</p>
               <p className="file-actions__action">filter</p>
 
-              {Boolean(state.selectedFiles.length) && (
+              {Boolean(state.selectedFileIds.length) && (
                 <div className="file-actions__selected">
                   <button
                     className="file-actions__action"
@@ -114,7 +145,10 @@ export default function Home() {
                   >
                     Delete selected
                   </button>
-                  <button className="file-actions__action">
+                  <button
+                    className="file-actions__action"
+                    onClick={onOpenSharingFiles}
+                  >
                     Share selected
                   </button>
                 </div>
@@ -127,7 +161,7 @@ export default function Home() {
                   file={file}
                   onClick={() => onSelectFile(file.id)}
                   isSelected={Boolean(
-                    state.selectedFiles.find((id) => id === file.id)
+                    state.selectedFileIds.find((id) => id === file.id)
                   )}
                 />
               ))}
@@ -138,6 +172,12 @@ export default function Home() {
           isOpen={state.isAddingFiles}
           onClose={onCloseAddingFiles}
           onUpload={onUpload}
+        />
+        <ShareFilesDialog
+          isOpen={state.isSharingFiles}
+          onClose={onCloseSharingFiles}
+          onShare={onShare}
+          fileNames={state.selectedFileIds}
         />
       </div>
     </>

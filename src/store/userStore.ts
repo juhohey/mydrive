@@ -1,10 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { authenticatedRequest } from '../client/http'
 import { getTokenFromStorage } from '../client/localStorage'
-import { apiRouteFile } from '../client/routes'
+import { apiRouteUser } from '../client/routes'
 
 export type TUser = {
   name: string
+  id: string
+}
+
+type TPermission = 'read' | 'write' | 'delete'
+
+export type TFilePermission = {
+  [key: string]: {
+    [K in TPermission]?: boolean
+  }
 }
 
 const initialState = {
@@ -32,7 +41,7 @@ export const getUsersIfNotExists = async (dispatch, getState) => {
 
   dispatch(usersStore.actions.setStatus('loading'))
 
-  const users = await get(apiRouteFile)
+  const users = await get(apiRouteUser)
   dispatch(usersStore.actions.setUsers(users))
 }
 
