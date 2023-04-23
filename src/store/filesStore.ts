@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { get } from '../client/http'
+import { authenticatedRequest } from '../client/http'
+import { getTokenFromStorage } from '../client/localStorage'
 import { apiRouteFile } from '../client/routes'
 
 export type TFile = {
@@ -31,15 +32,19 @@ const filesStore = createSlice({
 })
 
 export const getUserFilesIfNotExists = async (dispatch, getState) => {
+  const request = authenticatedRequest(getTokenFromStorage())
+
   if (getState().files.status !== 'initial') return
 
   dispatch(filesStore.actions.setStatus('loading'))
 
-  const files = await get(apiRouteFile)
+  const files = await request.get(apiRouteFile)
   dispatch(filesStore.actions.setFiles(files))
 }
 export const getUserFiles = async (dispatch, getState) => {
-  const files = await get(apiRouteFile)
+  const request = authenticatedRequest(getTokenFromStorage())
+
+  const files = await request.get(apiRouteFile)
   dispatch(filesStore.actions.setFiles(files))
 }
 

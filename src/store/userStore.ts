@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { get } from '../client/http'
+import { authenticatedRequest } from '../client/http'
+import { getTokenFromStorage } from '../client/localStorage'
 import { apiRouteFile } from '../client/routes'
 
 export type TUser = {
@@ -25,6 +26,8 @@ const usersStore = createSlice({
 })
 
 export const getUsersIfNotExists = async (dispatch, getState) => {
+  const { get } = authenticatedRequest(getTokenFromStorage())
+
   if (getState().users.status !== 'initial') return
 
   dispatch(usersStore.actions.setStatus('loading'))

@@ -14,9 +14,12 @@ export default function Auth() {
   const onLogin = async (id) => {
     try {
       setStatus('loading')
+
       const res = await post(apiRouteLogin, JSON.stringify({ userId: id }))
-      setTokenToStorage(res.token)
+
       setStatus('success')
+      setTokenToStorage(res.token)
+
       setTimeout(() => {
         router.push('/')
       }, 1000)
