@@ -26,12 +26,11 @@ export const deleteHttp = (url: string, headers = defaultHeaders) => {
 export const authenticatedRequest = (token) => {
   const headers = new Headers({
     'x-api-token': token,
-    'content-Type': 'application/json',
   })
 
   return {
     get: (url) => get(url, headers),
-    delete: (url) => get(url, headers),
+    delete: (url) => deleteHttp(url, headers),
     post: (url, body) => post(url, body, headers),
   }
 }

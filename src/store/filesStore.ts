@@ -41,6 +41,7 @@ export const getUserFilesIfNotExists = async (dispatch, getState) => {
   const files = await request.get(apiRouteFile)
   dispatch(filesStore.actions.setFiles(files))
 }
+
 export const getUserFiles = async (dispatch, getState) => {
   const request = authenticatedRequest(getTokenFromStorage())
 

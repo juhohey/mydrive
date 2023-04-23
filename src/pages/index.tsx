@@ -7,6 +7,7 @@ import File from '../components/File/File'
 import Header from '../components/Header/Header'
 import AddFilesDialog from '../components/Partials/AddFilesDialog'
 import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
+import { getMe } from '../store/meStore'
 import { useAppDispatch, useAppSelector } from '../store/store'
 
 type HomeState = {
@@ -29,6 +30,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getUserFilesIfNotExists)
+    dispatch(getMe)
   }, [])
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
@@ -86,9 +88,11 @@ export default function Home() {
       <div>
         <Header>
           <>
-            <button onClick={onOpenAddingFiles}>Upload</button>
+            <button className="header__upload" onClick={onOpenAddingFiles}>
+              Upload files
+            </button>
             <div className="header__avatar avatar">
-              <p>userName</p>
+              {me.name.substring(0, 1)}
             </div>
           </>
         </Header>

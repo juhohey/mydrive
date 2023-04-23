@@ -1,4 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { authenticatedRequest } from '../client/http'
+import { getTokenFromStorage } from '../client/localStorage'
+import { apiRouteUserMe } from '../client/routes'
 import { TUser } from './userStore'
 
 const initialState = {
@@ -15,4 +18,10 @@ const meStore = createSlice({
   },
 })
 
+export const getMe = async (dispatch, getState) => {
+  const request = authenticatedRequest(getTokenFromStorage())
+
+  const files = await request.get(apiRouteUserMe)
+  dispatch(meStore.actions.setMe(files))
+}
 export default meStore

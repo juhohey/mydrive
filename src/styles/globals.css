@@ -59,6 +59,10 @@ button,
   cursor: pointer;
   border-radius: 4px;
 }
+button:disabled,
+.button:disabled {
+  opacity: 0.5;
+}
 
 @media (prefers-color-scheme: dark) {
   html {

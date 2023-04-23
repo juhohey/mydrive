@@ -12,6 +12,7 @@ import '../styles/globals.css'
 import '../styles/layout.css'
 import '../styles/margin.css'
 import '../styles/upload.css'
+import '../styles/user.css'
 import Auth from './login'
 
 const App = ({ Component, pageProps }: AppProps) => {
