@@ -35,5 +35,6 @@
 }
 
 .share__name {
+  cursor: pointer;
   font-size: 24px;
 }

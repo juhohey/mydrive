@@ -34,6 +34,19 @@ export default function ShareFilesDialog({
     setState({ ...state, [userId]: { ...userPermissions, [permission]: true } })
   }
 
+  const onToggleAllPermissions = (userId) => {
+    const userPermissions = state[userId] || {}
+    const existingPermissions =
+      Object.values(userPermissions).length &&
+      Object.values(userPermissions).every(Boolean)
+
+    if (existingPermissions) {
+      return setState({ ...state, [userId]: {} })
+    }
+
+    setState({ ...state, [userId]: { read: true, write: true, delete: true } })
+  }
+
   const onConfirm = () => {
     onShare(state)
     setState({})
@@ -66,7 +79,14 @@ export default function ShareFilesDialog({
           {usersCanSharewith.map((user) => {
             return (
               <div key={user.id} className="share__row">
-                <div className="share__name">{user.name}</div>
+                <div
+                  className="share__name"
+                  onClick={() => {
+                    onToggleAllPermissions(user.id)
+                  }}
+                >
+                  {user.name}
+                </div>
 
                 <div className="share__permissions">
                   <p
