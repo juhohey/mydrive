@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { post } from '../client/http'
 import { setTokenToStorage } from '../client/localStorage'
 import { apiRouteLogin } from '../client/routes'

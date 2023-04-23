@@ -14,7 +14,9 @@ import '../styles/margin.css'
 import '../styles/upload.css'
 import '../styles/user.css'
 import '../styles/share.css'
+import '../styles/snack.css'
 import Auth from './login'
+import Snack from '../components/Snack/Snack'
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
@@ -28,6 +30,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   return (
     <Provider store={store}>
       <Component {...pageProps} />
+      <Snack />
     </Provider>
   )
 }

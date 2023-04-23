@@ -20,14 +20,16 @@ export default function AddFilesDialog({
     setFiles([...files])
   }
 
+  const onConfirm = () => {
+    setFiles([])
+    onUpload(files)
+  }
+
   return (
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      onConfirm={() => {
-        setFiles([])
-        onUpload(files)
-      }}
+      onConfirm={onConfirm}
       confirmLabel={'upload'}
     >
       <div className="m-b-4">

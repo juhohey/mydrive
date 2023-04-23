@@ -14,6 +14,7 @@ import AddFilesDialog from '../components/Partials/AddFilesDialog'
 import ShareFilesDialog from '../components/Partials/ShareFilesDialog'
 import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
 import { getMe } from '../store/meStore'
+import snackStore from '../store/snackStore'
 import { useAppDispatch, useAppSelector } from '../store/store'
 import { getUsersIfNotExists, TFilePermission } from '../store/userStore'
 
@@ -90,6 +91,11 @@ export default function Home() {
           ''
         )}`
       )
+      dispatch(
+        snackStore.actions.showSnack(
+          `${state.selectedFileIds.length} files deleted.`
+        )
+      )
       setState({ ...state, selectedFileIds: [] })
       dispatch(getUserFiles)
     } catch (error) {
@@ -102,6 +108,11 @@ export default function Home() {
       const body = { fileIds: state.selectedFileIds, permission }
       await request.put(apiRouteFileShare, JSON.stringify(body))
 
+      dispatch(
+        snackStore.actions.showSnack(
+          `${state.selectedFileIds.length} files shared!`
+        )
+      )
       setState({ ...state, isSharingFiles: false, selectedFileIds: [] })
       dispatch(getUserFiles)
     } catch (error) {
@@ -116,6 +127,7 @@ export default function Home() {
 
       await request.post(apiRouteFileUpload, formData)
 
+      dispatch(snackStore.actions.showSnack(`${files.length} files uploaded!`))
       setState({ ...state, isAddingFiles: false })
       dispatch(getUserFiles)
     } catch (error) {

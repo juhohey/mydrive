@@ -4,6 +4,7 @@ import thunkMiddleware from 'redux-thunk'
 import filesStore from './filesStore'
 import meStore from './meStore'
 import usersStore from './userStore'
+import snackStore from './snackStore'
 
 export type TStoreKey = keyof ReturnType<typeof createStore>
 export type TStore = ReturnType<typeof createStore>
@@ -25,6 +26,7 @@ function createStore() {
       files: filesStore.reducer,
       users: usersStore.reducer,
       me: meStore.reducer,
+      snack: snackStore.reducer,
     },
     middleware: [thunkMiddleware],
   })
