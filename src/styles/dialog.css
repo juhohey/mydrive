@@ -39,4 +39,6 @@
 
 .dialog__action {
   margin: 0 12px;
+  text-transform: capitalize;
+  background-color: var(--color-bg-100);
 }

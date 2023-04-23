@@ -1,5 +1,4 @@
 .avatar {
-  padding: 8;
   background-color: var(--color-primary);
   border-radius: 50%;
   width: 40px;
@@ -8,4 +7,5 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  text-transform: capitalize;
 }

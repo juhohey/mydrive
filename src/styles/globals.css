@@ -1,6 +1,7 @@
 :root {
   --color-bg-100: white;
   --color-bg-200: #fafafa;
+  --color-bg-300: #eee;
 
   --color-text: #222;
 
@@ -10,7 +11,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg-100: black;
-    --color-bg-200: #2a2a2a;
+    --color-bg-200: #1a1a1a;
+    --color-bg-300: #2a2a2a;
 
     --color-text: white;
   }

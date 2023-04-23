@@ -27,6 +27,7 @@
 .file-actions {
   display: flex;
   border-bottom: 1px solid var(--color-bg-200);
+  align-items: center;
 }
 
 .file-actions__action {
