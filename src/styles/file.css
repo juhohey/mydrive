@@ -8,15 +8,16 @@
   padding: 12px;
   border: 2px solid transparent;
   transition: border 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .file__container {
   display: flex;
-  align-items: flex-end;
-  height: 100%;
 }
 
-.file_filename {
+.file__filename {
   word-break: break-word;
 }
 
@@ -51,6 +52,11 @@
 
 .file-toggle--selected {
   text-decoration: underline;
+}
+
+.file__icon {
+  margin-left: auto;
+  display: block;
 }
 
 @media only screen and (max-width: 600px) {

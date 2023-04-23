@@ -210,6 +210,7 @@ export default function Home() {
                 <File
                   key={file.id}
                   file={file}
+                  me={me}
                   onClick={() => onSelectFile(file.id)}
                   isSelected={Boolean(
                     state.selectedFileIds.find((id) => id === file.id)
