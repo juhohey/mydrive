@@ -11,6 +11,7 @@ import File from '../components/File/File'
 import FileToggle from '../components/File/FileToggle'
 import Header from '../components/Header/Header'
 import AddFilesDialog from '../components/Partials/AddFilesDialog'
+import FileActions from '../components/Partials/FileActions'
 import ShareFilesDialog from '../components/Partials/ShareFilesDialog'
 import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
 import { getMe } from '../store/meStore'
@@ -40,16 +41,6 @@ export default function Home() {
 
   const request = authenticatedRequest(getTokenFromStorage())
 
-  const canShareSelected = state.selectedFileIds.every(
-    (selectedFileId) =>
-      files.data.find((file) => file.id === selectedFileId)!.owner === me.id
-  )
-
-  const canDeleteSelected = state.selectedFileIds.every((selectedFileId) => {
-    const file = files.data.find((file) => file.id === selectedFileId)
-    return file!.owner === me.id || file?.userPermission[me.id].delete
-  })
-
   const filesToRender = files.data.filter((file) => {
     if (state.fileToggle === 2) return file.owner === me.id
     else if (state.fileToggle === 3) return file.userPermission[me.id]?.read
@@ -65,78 +56,80 @@ export default function Home() {
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
 
+  const onOpenSharing = () => setState({ ...state, isSharingFiles: true })
   const onCloseSharingFiles = () =>
     setState({ ...state, isSharingFiles: false })
-  const onOpenSharingFiles = () => setState({ ...state, isSharingFiles: true })
+
+  const onSetFileToggle = (fileToggleId) =>
+    setState({ ...state, fileToggle: fileToggleId, selectedFileIds: [] })
 
   const onSelectFile = (id: string) => {
     const isSelected = state.selectedFileIds.includes(id)
     if (isSelected) {
+      const selectedFileIds = state.selectedFileIds.filter(
+        (selectedFile) => selectedFile !== id
+      )
+
       setState({
         ...state,
-        selectedFileIds: state.selectedFileIds.filter(
-          (selectedFile) => selectedFile !== id
-        ),
+        selectedFileIds,
       })
     } else {
       setState({ ...state, selectedFileIds: state.selectedFileIds.concat(id) })
     }
   }
 
-  const onDeleteSelected = async () => {
+  const onDelete = async () => {
+    const selectedFileIdParams = state.selectedFileIds.reduce(
+      (acc, next) => acc + '&id=' + next,
+      ''
+    )
     try {
-      await request.delete(
-        `${apiRouteFile}?${state.selectedFileIds.reduce(
-          (acc, next) => acc + '&id=' + next,
-          ''
-        )}`
-      )
-      dispatch(
-        snackStore.actions.showSnack(
-          `${state.selectedFileIds.length} files deleted.`
-        )
-      )
-      setState({ ...state, selectedFileIds: [] })
-      dispatch(getUserFiles)
+      await request.delete(`${apiRouteFile}?${selectedFileIdParams}`)
     } catch (error) {
       dispatch(snackStore.actions.showSnack(error))
     }
+
+    dispatch(
+      snackStore.actions.showSnack(
+        `${state.selectedFileIds.length} files deleted.`
+      )
+    )
+    setState({ ...state, selectedFileIds: [] })
+    dispatch(getUserFiles)
   }
 
   const onShare = async (permission: TFilePermission) => {
-    try {
-      const body = { fileIds: state.selectedFileIds, permission }
-      await request.put(apiRouteFileShare, JSON.stringify(body))
+    const body = { fileIds: state.selectedFileIds, permission }
 
-      dispatch(
-        snackStore.actions.showSnack(
-          `${state.selectedFileIds.length} files shared!`
-        )
-      )
-      setState({ ...state, isSharingFiles: false, selectedFileIds: [] })
-      dispatch(getUserFiles)
+    try {
+      await request.put(apiRouteFileShare, JSON.stringify(body))
     } catch (error) {
       dispatch(snackStore.actions.showSnack(error))
     }
+
+    dispatch(
+      snackStore.actions.showSnack(
+        `${state.selectedFileIds.length} files shared!`
+      )
+    )
+    setState({ ...state, isSharingFiles: false, selectedFileIds: [] })
+    dispatch(getUserFiles)
   }
 
   const onUpload = async (files: File[]) => {
+    const formData = new FormData()
+    files.forEach((file) => formData.append(file.name, file))
+
     try {
-      const formData = new FormData()
-      files.forEach((file) => formData.append(file.name, file))
-
       await request.post(apiRouteFileUpload, formData)
-
-      dispatch(snackStore.actions.showSnack(`${files.length} files uploaded!`))
-      setState({ ...state, isAddingFiles: false })
-      dispatch(getUserFiles)
     } catch (error) {
       dispatch(snackStore.actions.showSnack(error))
     }
-  }
 
-  const onSetFileToggle = (fileToggleId) => {
-    setState({ ...state, fileToggle: fileToggleId, selectedFileIds: [] })
+    dispatch(snackStore.actions.showSnack(`${files.length} files uploaded!`))
+    setState({ ...state, isAddingFiles: false })
+    dispatch(getUserFiles)
   }
 
   return (
@@ -181,42 +174,13 @@ export default function Home() {
                 isSelected={state.fileToggle === 3}
               />
             </div>
-            <div className="file-actions row sticky-after-header">
-              <button className="file-actions__action" disabled={true}>
-                search
-              </button>
-              <button className="file-actions__action" disabled={true}>
-                view: grid
-              </button>
-              <button className="file-actions__action" disabled={true}>
-                view: table
-              </button>
-              <button className="file-actions__action" disabled={true}>
-                sort
-              </button>
-              <button className="file-actions__action" disabled={true}>
-                filter
-              </button>
-
-              {Boolean(state.selectedFileIds.length) && (
-                <div className="file-actions__selected">
-                  <button
-                    className="file-actions__action"
-                    onClick={onDeleteSelected}
-                    disabled={!canDeleteSelected}
-                  >
-                    Delete selected
-                  </button>
-                  <button
-                    className="file-actions__action"
-                    onClick={onOpenSharingFiles}
-                    disabled={!canShareSelected}
-                  >
-                    Share selected
-                  </button>
-                </div>
-              )}
-            </div>
+            <FileActions
+              onDelete={onDelete}
+              onOpenSharing={onOpenSharing}
+              selectedFileIds={state.selectedFileIds}
+              files={files}
+              me={me}
+            />
             <div className="row">
               {filesToRender.map((file) => (
                 <File

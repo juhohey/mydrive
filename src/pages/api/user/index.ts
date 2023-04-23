@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { user, db } = await context(req)
+  const { db } = await context(req)
   switch (req.method) {
     case 'GET': {
       const users = await getUsers(db)

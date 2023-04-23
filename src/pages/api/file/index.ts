@@ -10,7 +10,7 @@ export default async function handler(
 
   switch (req.method) {
     case 'GET': {
-      const files = getUserFiles(user.name, db)
+      const files = await getUserFiles(user.name, db)
       return res.status(200).json(files)
     }
 
@@ -20,7 +20,7 @@ export default async function handler(
 
       const ids = Array.isArray(queryIds) ? queryIds : ([queryIds] as string[]) // no type inference here?
 
-      deleteFiles(ids, db)
+      await deleteFiles(ids, db)
       return res.status(200).json({ body: req.body })
     }
 

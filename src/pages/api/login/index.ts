@@ -8,6 +8,8 @@ export default async function handler(
   switch (req.method) {
     case 'POST':
       const userId = req.body.userId
+      if (!userId) return res.status(400).send('')
+
       const token = await getAuthenticationToken(userId)
       return res.status(200).json({ token })
 

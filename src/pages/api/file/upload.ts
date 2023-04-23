@@ -17,7 +17,7 @@ export default async function handler(
 
         const files = parsedFiles.map((file) => ({
           filepath: file.filepath,
-          name: file.originalFilename,
+          name: file.originalFilename || 'file',
           extension: path.extname(file.newFilename).toLowerCase(),
           id: path.basename(file.newFilename, path.extname(file.newFilename)),
           owner: reqContext.user.name,
@@ -38,13 +38,13 @@ export default async function handler(
 }
 
 const parseForm = (req: NextApiRequest) =>
-  new Promise((resole, reject) => {
+  new Promise<Array<formidable.File>>((resole, reject) => {
     const form = formidable({
       uploadDir: path.join('./', 'uploads'),
       keepExtensions: true,
     })
 
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, (err, _, files) => {
       if (err) {
         return reject(err)
       }

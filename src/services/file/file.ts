@@ -9,13 +9,13 @@ const formatSharedFile = (file) => ({
   userPermission: file.userPermission,
 })
 
-export const saveFiles = (files: TFile[], db: TDatabase) => {
+export const saveFiles = async (files: TFile[], db: TDatabase) => {
   files.forEach((file) => {
     db.get('files').push(file).write()
   })
 }
 
-export const updateFilePermissions = (
+export const updateFilePermissions = async (
   fileIds: TFile['id'][],
   permission: TFilePermission,
   db: TDatabase
@@ -28,13 +28,13 @@ export const updateFilePermissions = (
   })
 }
 
-export const deleteFiles = (fileIds: TFile['id'][], db: TDatabase) => {
+export const deleteFiles = async (fileIds: TFile['id'][], db: TDatabase) => {
   db.get('files')
     .remove((file) => fileIds.includes(file.id))
     .write()
 }
 
-export const getUserFiles = (userId: string, db: TDatabase) => {
+export const getUserFiles = async (userId: string, db: TDatabase) => {
   const ownFiles = db
     .get('files')
     .filter((file) => file.owner === userId)
