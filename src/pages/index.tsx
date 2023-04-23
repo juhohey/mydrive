@@ -8,6 +8,7 @@ import {
   apiRouteFileUpload,
 } from '../client/routes'
 import File from '../components/File/File'
+import FileToggle from '../components/File/FileToggle'
 import Header from '../components/Header/Header'
 import AddFilesDialog from '../components/Partials/AddFilesDialog'
 import ShareFilesDialog from '../components/Partials/ShareFilesDialog'
@@ -20,6 +21,7 @@ type HomeState = {
   selectedFileIds: string[]
   isAddingFiles: boolean
   isSharingFiles: boolean
+  fileToggle: number
 }
 
 export default function Home() {
@@ -32,16 +34,25 @@ export default function Home() {
     selectedFileIds: [],
     isAddingFiles: false,
     isSharingFiles: false,
+    fileToggle: 1,
   })
 
   const request = authenticatedRequest(getTokenFromStorage())
+
   const canShareSelected = state.selectedFileIds.every(
     (selectedFileId) =>
       files.data.find((file) => file.id === selectedFileId)!.owner === me.id
   )
+
   const canDeleteSelected = state.selectedFileIds.every((selectedFileId) => {
     const file = files.data.find((file) => file.id === selectedFileId)
-    return file.owner === me.id || file?.userPermission[me.id].delete
+    return file!.owner === me.id || file?.userPermission[me.id].delete
+  })
+
+  const filesToRender = files.data.filter((file) => {
+    if (state.fileToggle === 2) return file.owner === me.id
+    else if (state.fileToggle === 3) return file.userPermission[me.id]?.read
+    return true
   })
 
   useEffect(() => {
@@ -112,6 +123,10 @@ export default function Home() {
     }
   }
 
+  const onSetFileToggle = (fileToggleId) => {
+    setState({ ...state, fileToggle: fileToggleId, selectedFileIds: [] })
+  }
+
   return (
     <>
       <Head>
@@ -134,6 +149,26 @@ export default function Home() {
         <main className="main">
           <div className={'container'}>
             <h1 className="m-b-2">Files</h1>
+            <div className="file-toggles">
+              <FileToggle
+                id={1}
+                text="All files"
+                onClick={onSetFileToggle}
+                isSelected={state.fileToggle === 1}
+              />
+              <FileToggle
+                id={2}
+                text="My files"
+                onClick={onSetFileToggle}
+                isSelected={state.fileToggle === 2}
+              />
+              <FileToggle
+                id={3}
+                text="Shared with me"
+                onClick={onSetFileToggle}
+                isSelected={state.fileToggle === 3}
+              />
+            </div>
             <div className="file-actions row sticky-after-header">
               <button className="file-actions__action" disabled={true}>
                 search
@@ -171,7 +206,7 @@ export default function Home() {
               )}
             </div>
             <div className="row">
-              {files.data.map((file) => (
+              {filesToRender.map((file) => (
                 <File
                   key={file.id}
                   file={file}

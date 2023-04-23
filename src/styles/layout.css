@@ -33,6 +33,10 @@
   cursor: pointer;
 }
 
+.flex {
+  display: flex;
+}
+
 .row {
   display: flex;
   flex-flow: row wrap;

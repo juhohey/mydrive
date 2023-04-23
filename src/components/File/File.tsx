@@ -14,7 +14,7 @@ export default function File({ file, isSelected, onClick }: FileProps) {
       onClick={onClick}
     >
       <div className="file__container">
-        <div className="file_filename">{file.name}</div>
+        <div className="file__filename">{file.name}</div>
       </div>
     </div>
   )
