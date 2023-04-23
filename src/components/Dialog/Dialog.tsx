@@ -4,8 +4,9 @@ type DialogProps = {
   children: React.ReactNode
   isOpen: boolean
   onClose: () => void
-  onConfirm: () => void
+  onConfirm?: () => void
   confirmLabel?: string
+  hasActions?: boolean
 }
 
 export default function Dialog({
@@ -14,20 +15,25 @@ export default function Dialog({
   onClose,
   onConfirm,
   confirmLabel = 'ok',
+  hasActions = true,
 }: DialogProps) {
   const dialogStateClass = isOpen ? 'dialog--open' : ''
   return (
     <aside className={`dialog ${dialogStateClass}`}>
       <div className="dialog__body">
         {children}
-        <div className="dialog__actions">
-          <button className="dialog__action" onClick={onClose}>
-            cancel
-          </button>
-          <button className="dialog__action" onClick={onConfirm}>
-            {confirmLabel}
-          </button>
-        </div>
+        {hasActions && (
+          <div className="dialog__actions">
+            <button className="dialog__action" onClick={onClose}>
+              cancel
+            </button>
+            {onConfirm && (
+              <button className="dialog__action" onClick={onConfirm}>
+                {confirmLabel}
+              </button>
+            )}
+          </div>
+        )}
       </div>
       <div className="dialog__bg" onClick={onClose} />
     </aside>

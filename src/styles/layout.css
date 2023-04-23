@@ -34,8 +34,19 @@
   margin-right: -16px;
 }
 
+.row-fluid {
+  display: flex;
+  flex-flow: row wrap;
+}
+
 .file-actions__selected {
   display: flex;
   align-items: center;
   margin-left: auto;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }

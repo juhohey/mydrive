@@ -1,9 +1,9 @@
 import { NextApiRequest } from 'next'
 import { NextResponse } from 'next/server'
-import { isAuthenticated } from './services/auth/auth'
+import { isAuthenticated } from './src/services/auth/auth'
 
 export const config = {
-  matcher: '/api/:path*',
+  matcher: '/(?!api)/login',
 }
 
 export function middleware(req: NextApiRequest) {

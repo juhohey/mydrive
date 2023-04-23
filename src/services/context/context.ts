@@ -1,7 +1,8 @@
 import { NextApiRequest } from 'next'
+import { TUser } from '../../store/userStore'
 import { getUserIdFromRequest } from '../auth/auth'
 import db from '../db/db'
-import { getUserById, TUser } from '../user/user'
+import { getUserById } from '../user/user'
 
 export type TContext = {
   user: TUser

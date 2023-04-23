@@ -1,10 +1,11 @@
 import Head from 'next/head'
-import React, { SyntheticEvent, useEffect, useState } from 'react'
-import { deleteHttp, post } from '../client/http'
+import React, { useEffect, useState } from 'react'
+import { authenticatedRequest } from '../client/http'
+import { getTokenFromStorage } from '../client/localStorage'
 import { apiRouteFile, apiRouteFileUpload } from '../client/routes'
-import Dialog from '../components/Dialog/Dialog'
 import File from '../components/File/File'
 import Header from '../components/Header/Header'
+import AddFilesDialog from '../components/Partials/AddFilesDialog'
 import { getUserFiles, getUserFilesIfNotExists } from '../store/filesStore'
 import { useAppDispatch, useAppSelector } from '../store/store'
 
@@ -15,22 +16,23 @@ type HomeState = {
 
 export default function Home() {
   const dispatch = useAppDispatch()
-  const files = useAppSelector((state) => state.files)
+  const { files, me } = useAppSelector((state) => ({
+    files: state.files,
+    me: state.me,
+  }))
   const [state, setState] = useState<HomeState>({
     selectedFiles: [],
     isAddingFiles: false,
   })
+
+  const request = authenticatedRequest(getTokenFromStorage())
+
   useEffect(() => {
     dispatch(getUserFilesIfNotExists)
   }, [])
 
   const onCloseAddingFiles = () => setState({ ...state, isAddingFiles: false })
   const onOpenAddingFiles = () => setState({ ...state, isAddingFiles: true })
-
-  const onUploadedFiles = () => {
-    setState({ ...state, isAddingFiles: false })
-    dispatch(getUserFiles)
-  }
 
   const onSelectFile = (id: string) => {
     const isSelected = state.selectedFiles.includes(id)
@@ -48,13 +50,25 @@ export default function Home() {
 
   const onDeleteSelected = async () => {
     try {
-      await deleteHttp(
+      await request.delete(
         `${apiRouteFile}?${state.selectedFiles.reduce(
           (acc, next) => acc + '&id=' + next,
           ''
         )}`
       )
       setState({ ...state, selectedFiles: [] })
+      dispatch(getUserFiles)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const onUpload = async (files: File[]) => {
+    try {
+      const formData = new FormData()
+      files.forEach((file) => formData.append(file.name, file))
+      await request.post(apiRouteFileUpload, formData)
+      setState({ ...state, isAddingFiles: false })
       dispatch(getUserFiles)
     } catch (error) {
       console.log(error)
@@ -119,64 +133,9 @@ export default function Home() {
         <AddFilesDialog
           isOpen={state.isAddingFiles}
           onClose={onCloseAddingFiles}
-          onUploaded={onUploadedFiles}
+          onUpload={onUpload}
         />
       </div>
     </>
-  )
-}
-
-type AddFilesDialogProps = {
-  isOpen: boolean
-  onClose: () => void
-  onUploaded: () => void
-}
-
-const AddFilesDialog = ({
-  isOpen,
-  onClose,
-  onUploaded,
-}: AddFilesDialogProps) => {
-  const [files, setFiles] = useState<File[]>([])
-
-  const onSetFiles = (e: SyntheticEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-    const files = target.files || []
-    setFiles([...files])
-  }
-
-  const onUpload = async () => {
-    try {
-      const formData = new FormData()
-      files.forEach((file) => formData.append(file.name, file))
-      await post(apiRouteFileUpload, formData)
-      onUploaded()
-    } catch (error) {
-      console.log('err', error)
-    }
-  }
-
-  return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      onConfirm={onUpload}
-      confirmLabel={'upload'}
-    >
-      <div className="m-b-4">
-        <h1 className="m-b-1">Add files</h1>
-        <input type="file" multiple={true} onChange={onSetFiles} />
-      </div>
-      <h2 className="m-b-1">Files</h2>
-      <div className="upload-files">
-        {files.map((file, i) => {
-          return (
-            <div key={i + file.name} className="upload-files__file">
-              {file.name}
-            </div>
-          )
-        })}
-      </div>
-    </Dialog>
   )
 }
