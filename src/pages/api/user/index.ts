@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import context from '../../../services/context/context'
-import { getUsers } from '../../../services/user/user'
+import { getUsers } from '../../../services/user/db'
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,14 +1,14 @@
 import formidable from 'formidable'
 import path from 'path'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { saveFiles } from '../../../services/file/file'
+import { saveFiles } from '../../../services/file/db'
 import context from '../../../services/context/context'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const reqContext = await context(req)
+  const { user, db } = await context(req)
 
   switch (req.method) {
     case 'POST':
@@ -20,12 +20,12 @@ export default async function handler(
           name: file.originalFilename || 'file',
           extension: path.extname(file.newFilename).toLowerCase(),
           id: path.basename(file.newFilename, path.extname(file.newFilename)),
-          owner: reqContext.user.name,
+          owner: user.name,
           userPermission: {},
           orgPermission: {},
         }))
 
-        await saveFiles(files, reqContext.db)
+        await saveFiles(files, db)
 
         return res.json(files)
       } catch (error) {

@@ -10,6 +10,7 @@ const formatSharedFile = (file) => ({
 })
 
 export const saveFiles = async (files: TFile[], db: TDatabase) => {
+  // TODO: lowdb batch update API seems to be missing
   files.forEach((file) => {
     db.get('files').push(file).write()
   })
@@ -20,6 +21,7 @@ export const updateFilePermissions = async (
   permission: TFilePermission,
   db: TDatabase
 ) => {
+  // TODO: lowdb batch update API seems to be missing
   fileIds.forEach((fileId) => {
     db.get('files')
       .find((file) => file.id === fileId)

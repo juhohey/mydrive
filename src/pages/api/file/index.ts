@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import context from '../../../services/context/context'
-import { deleteFiles, getUserFiles } from '../../../services/file/file'
+import { deleteFiles, getUserFiles } from '../../../services/file/db'
 
 export default async function handler(
   req: NextApiRequest,

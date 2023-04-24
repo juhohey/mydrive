@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import context from '../../../services/context/context'
-import { updateFilePermissions } from '../../../services/file/file'
+import { updateFilePermissions } from '../../../services/file/db'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { user, db } = await context(req)
+  const { db } = await context(req)
 
   switch (req.method) {
     case 'PUT': {

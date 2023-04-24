@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { getTokenFromStorage } from '../client/localStorage'
+import Snack from '../components/Snack/Snack'
 import store from '../store/store'
 import '../styles/auth.css'
 import '../styles/dialog.css'
@@ -11,17 +12,18 @@ import '../styles/file.css'
 import '../styles/globals.css'
 import '../styles/layout.css'
 import '../styles/margin.css'
-import '../styles/upload.css'
-import '../styles/user.css'
 import '../styles/share.css'
 import '../styles/snack.css'
+import '../styles/upload.css'
+import '../styles/user.css'
 import Auth from './login'
-import Snack from '../components/Snack/Snack'
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
+
   const isLoggedIn = Boolean(getTokenFromStorage())
   const shouldLogin = !isLoggedIn && router.pathname !== '/login'
+
   if (shouldLogin) {
     router.replace('/login')
     return <Auth />
@@ -35,6 +37,7 @@ const App = ({ Component, pageProps }: AppProps) => {
   )
 }
 
+// Disable server-side render to enforce authentication
 export default dynamic(() => Promise.resolve(App), {
   ssr: false,
 })
